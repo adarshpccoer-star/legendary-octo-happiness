@@ -2,7 +2,7 @@ import React from 'react'
 
 function HeroSection() {
   return (
-    <section className="relative h-screen w-full bg-[#E9EAE4] overflow-hidden flex justify-center">
+    <section className="relative h-screen w-full bg-[#c6bbaa] overflow-hidden flex justify-center">
       
       <div className="relative w-full flex flex-col items-center mt-20">
         
@@ -16,7 +16,7 @@ function HeroSection() {
             - Used a handwritten font stack
             - Added a playful color
         */}
-<div className="absolute left-10  ml-3 bottom-24 z-30 max-w-[250px] 
+<div className="absolute left-10  ml-3 bottom-24 z-30 max-w-62.5 
                 origin-bottom-left transition-transform hover:rotate-0">
   <p className="text-xl text-gray-700 leading-tight" 
      style={{ fontFamily: '"Comic Sans MS", "Comic Sans", "Chalkboard SE", "cursive"' }}>
@@ -28,7 +28,7 @@ function HeroSection() {
         <img
           src="/sofa5.png" 
           alt="Sofa"
-          className="absolute top-20 z-20 w-[90%] max-w-[900px] h-auto object-contain drop-shadow-2xl"
+          className="absolute top-20 z-20 w-[90%] max-w-225 h-auto object-contain drop-shadow-2xl"
         />
         
       </div>
