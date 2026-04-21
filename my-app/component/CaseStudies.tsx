@@ -1,4 +1,9 @@
-import React from "react";
+"use client"
+import React, { useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 interface GalleryItem {
   id: string;
@@ -9,6 +14,80 @@ interface GalleryItem {
 }
 
 function CaseStudies() {
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.from(".cs-text", {
+        x: -80,
+        opacity: 0,
+        duration: 1,
+        stagger: 0.2,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 15%",
+          toggleActions: "play reverse play reverse",
+        },
+      });
+
+      const cards = gsap.utils.toArray<HTMLElement>(".cs-card");
+      cards.forEach((card, index) => {
+        const fromX = index % 2 === 0 ? -130 : 130;
+        const hideX = -fromX;
+
+        gsap.set(card, { x: fromX, opacity: 0 });
+
+        ScrollTrigger.create({
+          trigger: card,
+          start: "top 15%",
+          end: "bottom top",
+          onEnter: () => {
+            gsap.to(card, {
+              x: 0,
+              opacity: 1,
+              duration: 0.85,
+              ease: "power3.out",
+              overwrite: "auto",
+            });
+          },
+          onEnterBack: () => {
+            gsap.to(card, {
+              x: 0,
+              opacity: 1,
+              duration: 0.85,
+              ease: "power3.out",
+              overwrite: "auto",
+            });
+          },
+          onUpdate: (self) => {
+            const deltaY = self.getVelocity();
+            if (deltaY < 0 && self.progress < 0.02) {
+              gsap.to(card, {
+                x: hideX,
+                opacity: 0,
+                duration: 0.45,
+                ease: "power2.in",
+                overwrite: "auto",
+              });
+            }
+          },
+          onLeaveBack: () => {
+            gsap.to(card, {
+              x: hideX,
+              opacity: 0,
+              duration: 0.45,
+              ease: "power2.in",
+              overwrite: "auto",
+            });
+          },
+        });
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
   const galleryItems: GalleryItem[] = [
     {
       id: "01",
@@ -55,21 +134,21 @@ function CaseStudies() {
   ];
 
   return (
-    <section className="min-h-screen w-full bg-[#e8dfd3] px-6 py-12 md:px-10 lg:px-16">
+    <section ref={sectionRef} className="min-h-screen w-full bg-[#e8dfd3] px-6 py-12 md:px-10 lg:px-16">
       <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[1.05fr_1.6fr]">
         <aside className="lg:sticky lg:top-10 lg:h-fit">
-          <p className="mb-4 text-xs uppercase tracking-[0.24em] text-black/45">Case Studies</p>
-          <h1 className="text-4xl font-semibold leading-tight tracking-tight text-black sm:text-6xl">
+          <p className="cs-text mb-4 text-xs uppercase tracking-[0.24em] text-black/45">Case Studies</p>
+          <h1 className="cs-text text-4xl font-semibold leading-tight tracking-tight text-black sm:text-6xl">
             Furniture
             <br />
             Style Gallery
           </h1>
-          <p className="mt-8 max-w-md text-sm leading-relaxed text-black/60">
+          <p className="cs-text mt-8 max-w-md text-sm leading-relaxed text-black/60">
             Explore curated furniture looks for every room. Each setup highlights a design mood so your catalog
             feels premium, consistent, and easy to browse.
           </p>
 
-          <div className="mt-8 grid grid-cols-2 gap-3">
+          <div className="cs-text mt-8 grid grid-cols-2 gap-3">
             <div className="rounded-xl border border-black/10 bg-white/50 p-4">
               <p className="text-xs uppercase tracking-[0.2em] text-black/45">Themes</p>
               <p className="mt-2 text-2xl font-semibold text-black">06</p>
@@ -85,13 +164,13 @@ function CaseStudies() {
           {galleryItems.map((item) => (
             <article
               key={item.id}
-              className="group overflow-hidden rounded-2xl border border-black/10 bg-[#f6f2eb] transition duration-300 hover:-translate-y-1 hover:shadow-lg"
+              className="cs-card group overflow-hidden rounded-2xl border border-black/10 bg-[#f6f2eb] transition duration-300 hover:-translate-y-1 hover:shadow-lg"
             >
-              <div className="aspect-[4/5] overflow-hidden">
+              <div className="aspect-4/5 overflow-hidden">
                 <img
                   src={item.image}
                   alt={item.title}
-                  className="h-full w-full object-cover grayscale-[25%] transition duration-700 group-hover:grayscale-0 group-hover:scale-105"
+                  className="h-full w-full object-cover grayscale-25 transition duration-700 group-hover:scale-105 group-hover:grayscale-0"
                 />
               </div>
               <div className="space-y-3 p-5">
@@ -110,4 +189,4 @@ function CaseStudies() {
   );
 }
 
-export default CaseStudies;
+export default CaseStudies;  

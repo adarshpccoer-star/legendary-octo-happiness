@@ -1,4 +1,9 @@
-import React from "react";
+"use client"
+import React, { useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 interface FeaturedProduct {
   id: string;
@@ -40,15 +45,52 @@ const featuredProducts: FeaturedProduct[] = [
 ];
 
 function FeaturedPage() {
+  const sectionRef = useRef<HTMLElement>(null);
+
+  // useEffect(() => {
+  //   const ctx = gsap.context(() => {
+  //     const tl = gsap.timeline({
+  //       scrollTrigger: {
+  //         trigger: sectionRef.current,
+  //         start: "top 15%",
+  //         toggleActions: "play none none none",
+  //       }
+  //     });
+
+  //     tl.from(".fp-heading", {
+  //       x: -70,
+  //       opacity: 0,
+  //       duration: 0.8,
+  //       ease: "power2.out"
+  //     })
+  //     .from(".fp-text", {
+  //       x: 70,
+  //       opacity: 0,
+  //       duration: 0.8,
+  //       ease: "power2.out"
+  //     }, "-=0.6")
+  //     .from(".fp-card", {
+  //       x: (index: number) => (index % 2 === 0 ? -80 : 80),
+  //       opacity: 0,
+  //       duration: 0.8,
+  //       stagger: 0.2,
+  //       ease: "power3.out"
+  //     }, "-=0.4");
+
+  //   }, sectionRef);
+
+  //   return () => ctx.revert();
+  // }, []);
+
   return (
-    <section className="min-h-screen w-full bg-[#f4f1ec] px-6 py-12 md:px-10 lg:px-16">
+    <section ref={sectionRef} className="min-h-screen w-full bg-[#f4f1ec] px-6 py-12 md:px-10 lg:px-16">
       <div className="mx-auto max-w-7xl">
         <div className="mb-10 flex flex-col gap-6 border-b border-black/10 pb-10 md:flex-row md:items-end md:justify-between">
-          <div>
+          <div className="fp-heading">
             <p className="mb-3 text-xs uppercase tracking-[0.25em] text-black/50">Signature Selection</p>
             <h1 className="text-4xl font-semibold tracking-tight text-black sm:text-6xl lg:text-7xl">Featured Products</h1>
           </div>
-          <p className="max-w-md text-sm leading-relaxed text-black/60">
+          <p className="fp-text max-w-md text-sm leading-relaxed text-black/60">
             Handpicked furniture made for modern homes. Explore timeless pieces that balance comfort, elegance,
             and durability.
           </p>
@@ -58,9 +100,9 @@ function FeaturedPage() {
           {featuredProducts.map((product) => (
             <article
               key={product.id}
-              className="group overflow-hidden rounded-2xl border border-black/10 bg-white/60 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg"
+              className="fp-card group overflow-hidden rounded-2xl border border-black/10 bg-white/60 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg"
             >
-              <div className="aspect-[4/5] overflow-hidden">
+              <div className="aspect-4/5 overflow-hidden">
                 <img
                   src={product.image}
                   alt={product.name}
